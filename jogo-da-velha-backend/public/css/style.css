@@ -1,0 +1,42 @@
+/* Reset CSS para limpar estilos padrão dos navegadores */
+body, h1, ul {
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Estilos para o tabuleiro e células do jogo */
+  .game-container {
+    text-align: center;
+    margin-top: 50px;
+  }
+  
+  .board {
+    display: grid;
+    grid-template-columns: repeat(3, 100px);
+    grid-gap: 5px;
+    margin-top: 20px;
+  }
+  
+  .cell {
+    width: 100px;
+    height: 100px;
+    background-color: #eee;
+    border: 1px solid #ccc;
+    font-size: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  
+  /* Estilo quando o jogador faz uma jogada (X ou O) */
+  .cell.marked {
+    pointer-events: none; /* Desabilita cliques após a célula ser marcada */
+  }
+  /* Estilo para células vencedoras */
+.cell.winner {
+    background-color: #9eff9e; /* Cor de fundo para células vencedoras */
+    color: #000; /* Cor do texto nas células vencedoras */
+    font-weight: bold; /* Texto em negrito nas células vencedoras */
+  }
+  

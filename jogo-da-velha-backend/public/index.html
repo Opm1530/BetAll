@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Jogo da Velha</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="game-container">
+  <h1>Jogo da Velha</h1>
+  <div class="board">
+    <div class="cell" data-cell="0"></div>
+    <div class="cell" data-cell="1"></div>
+    <div class="cell" data-cell="2"></div>
+    <div class="cell" data-cell="3"></div>
+    <div class="cell" data-cell="4"></div>
+    <div class="cell" data-cell="5"></div>
+    <div class="cell" data-cell="6"></div>
+    <div class="cell" data-cell="7"></div>
+    <div class="cell" data-cell="8"></div>
+  </div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const cells = document.querySelectorAll('.cell');
+    const socket = io();
+    let currentPlayer = 'X';
+
+    cells.forEach((cell, index) => {
+      cell.addEventListener('click', () => {
+        if (cell.textContent === '') {
+          socket.emit('makeMove', index);
+        }
+      });
+    });
+
+    socket.on('moveMade', (index) => {
+      cells[index].textContent = currentPlayer;
+      cells[index].classList.add('marked');
+      currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+    });
+
+    function checkGameStatus() {
+      const winningConditions = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6]
+      ];
+
+      for (const condition of winningConditions) {
+        const [a, b, c] = condition;
+        if (
+          cells[a].textContent !== '' &&
+          cells[a].textContent === cells[b].textContent &&
+          cells[a].textContent === cells[c].textContent
+        ) {
+          cells[a].classList.add('winner');
+          cells[b].classList.add('winner');
+          cells[c].classList.add('winner');
+          alert(`Jogador ${cells[a].textContent} ganhou!`);
+          return;
+        }
+      }
+
+      const isBoardFull = [...cells].every(cell => cell.textContent !== '');
+      if (isBoardFull) {
+        alert('Empate!');
+      }
+    }
+  });
+</script>
+
+</body>
+</html>
